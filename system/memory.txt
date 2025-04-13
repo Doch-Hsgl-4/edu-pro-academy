@@ -123,3 +123,25 @@
 - Шрифт основной — Roboto
 - Аватары круглые, кнопки адаптивные, анимации через AOS
 - Страницы адаптированы под мобильные устройства
+
+
+=== ТАБЛИЦЫ БАЗЫ ДАННЫХ ===
+
+1. users — информация о пользователях
+- ID, username, email, password, profile_photo, role, created_at, updated_at, is_active, email_verified
+
+2. courses — курсы
+- ID, title, slug, description, created_at, author_id, is_public
+
+3. lessons — темы внутри курсов
+- ID, course_id, title, slug, content_path, order_num, is_free, created_at
+
+4. lesson_relations — связи между темами
+- ID, lesson_from, lesson_to, type ('required', 'optional')
+
+5. progress — отслеживание прохождения уроков пользователями
+- ID, user_id, lesson_id, status ('not_started', 'in_progress', 'completed', 'passed_test'), last_opened, updated_at
+
+6. course_relations — связи между курсами
+- ID, course_from, course_to, type ('required', 'optional'), comment
+
