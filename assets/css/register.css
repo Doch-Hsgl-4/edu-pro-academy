@@ -1,0 +1,102 @@
+/* === Стили для страницы регистрации (register.php) === */
+
+.auth-page {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    background-color: #fff;
+  }
+  
+  .main-centered {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 40px 20px;
+  }
+  
+  .form-container {
+    max-width: 500px;
+    width: 100%;
+    background: #f9f9f9;
+    padding: 30px;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+  }
+  
+  .form-container h2 {
+    text-align: center;
+    margin-bottom: 10px;
+  }
+  
+  .form-box label {
+    display: block;
+    margin: 10px 0 5px;
+  }
+  
+  .form-box input {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 5px;
+    border-radius: 6px;
+    border: 1px solid #ccc;
+  }
+  
+  .error-msg {
+    color: red;
+    font-size: 13px;
+    margin-bottom: 10px;
+    text-align: left;
+  }
+  
+  .avatar-preview {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    object-fit: cover;
+    background: #ddd;
+    display: block;
+    margin: 10px auto;
+  }
+  
+  .login-link {
+    text-align: center;
+    display: block;
+    margin-top: 20px;
+    color: var(--accent-color);
+    text-decoration: none;
+  }
+  
+  .btn {
+    background-color: var(--accent-color);
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 6px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background 0.3s;
+    display: block;
+    width: 100%;
+    margin-top: 20px;
+  }
+  
+  .btn:hover {
+    background-color: #e67e00;
+  }
+  
+  @media (max-width: 600px) {
+    .form-container {
+      padding: 20px;
+    }
+  
+    .btn {
+      padding: 10px;
+    }
+  
+    .avatar-preview {
+      width: 80px;
+      height: 80px;
+    }
+  }
+  
