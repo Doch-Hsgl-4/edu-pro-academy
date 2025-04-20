@@ -1,4 +1,9 @@
 <?php
+// === ОШИБКИ (отключены для продакшена) ===
+ini_set('display_errors', 0);
+ini_set('display_startup_errors', 0);
+error_reporting(0);
+
 session_start();
 require_once 'includes/db.php';
 
@@ -40,46 +45,55 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit'])) {
     $stmt->execute([$email]);
     if ($stmt->fetchColumn()) $errors['email'] = 'Email уже используется';
 
+    // === Загрузка аватара ===
     $photoPath = 'assets/images/default-avatar.png';
     if (!empty($_FILES['profile_photo']['name'])) {
-      $maxSize = 2 * 1024 * 1024;
+      $maxSize = 2 * 1024 * 1024; // 2MB
       if ($_FILES['profile_photo']['size'] > $maxSize) {
         $errors['profile_photo'] = 'Файл слишком большой (макс. 2MB)';
       } else {
-        $allowedMime = ['image/jpeg', 'image/png', 'image/gif'];
+        $allowedMime = ['image/jpeg', 'image/png', 'image/gif', 'image/webp'];
+
         $finfo = finfo_open(FILEINFO_MIME_TYPE);
         $mime = finfo_file($finfo, $_FILES['profile_photo']['tmp_name']);
         finfo_close($finfo);
+
         if (!in_array($mime, $allowedMime)) {
-          $errors['profile_photo'] = 'Разрешены только JPEG, PNG, GIF';
+          $errors['profile_photo'] = 'Разрешены только JPEG, PNG, GIF, WebP';
         } else {
           $ext = pathinfo($_FILES['profile_photo']['name'], PATHINFO_EXTENSION);
           $newName = uniqid() . '.' . $ext;
           $uploadDir = 'uploads/';
           if (!is_dir($uploadDir)) mkdir($uploadDir, 0775, true);
           $target = $uploadDir . $newName;
+
           if (move_uploaded_file($_FILES['profile_photo']['tmp_name'], $target)) {
             $photoPath = $target;
+          } else {
+            $errors['profile_photo'] = 'Ошибка загрузки файла. Проверьте права доступа к папке uploads.';
           }
         }
       }
     }
 
+    // === Регистрация ===
     if (!array_filter($errors)) {
       $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
       $verifyToken = bin2hex(random_bytes(32));
+
       $stmt = $pdo->prepare("INSERT INTO users (username, email, password, profile_photo, email_verified, verification_token) VALUES (?, ?, ?, ?, 0, ?)");
       $stmt->execute([$username, $email, $hashedPassword, $photoPath, $verifyToken]);
 
-      $verifyLink = "http://localhost/verify_email.php?token=$verifyToken";
+      $verifyLink = "http://localhost/verify_email_link.php?token=$verifyToken";
       mail($email, "Подтверждение Email", "Перейдите по ссылке: $verifyLink");
 
-      header("Location: check_email.php");
+      header("Location: verify_email.php");
       exit;
     }
   }
 }
 ?>
+
 
 <!DOCTYPE html>
 <html lang="ru">
